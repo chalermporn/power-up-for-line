@@ -1,0 +1,28 @@
+{
+  "name": "LINE",
+  "description": "",
+  "details": "LINE Power-Up prototype.",
+  "icon": {
+    "url": "/public/images/LINE_Icon.png"
+  },
+  "author": "Kazuki Nakajima",
+  "capabilities": [
+    "authorization-status",
+    "attachment-sections",
+    "attachment-thumbnail",
+    "board-buttons",
+    "callback",
+    "card-badges",
+    "card-buttons",
+    "card-detail-badges",
+    "card-from-url",
+    "format-url",
+    "show-authorization",
+    "show-settings"
+  ],
+  "connectors": {
+    "iframe": {
+      "url": "/"
+    }
+  }
+}
