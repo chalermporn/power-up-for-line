@@ -449,11 +449,15 @@ TrelloPowerUp.initialize({
     var state = "dummy";
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
     console.log("Auth URL is " + auth_url);
-    open(auth_url, {height: 600, width: 900}, function(err, code){
+    open(auth_url, {height: 600, width: 900}, function(err, query){
         if (err) throw err;
 
-        console.log(code);
-        var token_url = "https://powerup-for-line.herokuapp.com/code/" + code;
+        if (state !== query.state){
+            throw err;
+        }
+
+        console.log(query.code);
+        var token_url = "https://powerup-for-line.herokuapp.com/code/" + query.code;
 
         request.getAsync({
             url: token_url,
