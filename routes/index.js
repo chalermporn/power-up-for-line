@@ -28,30 +28,20 @@ router.get('/auth-success', (req, res, next) => {
     }
 
     // Request Access Token using code.
-    let query_strings = {
-        grant_type: "authorization_code",
-        code: req.query.code,
-        redirect_uri: "https://powerup-for-line.herokuapp.com/auth-success",
-        client_id: process.env.LINE_CLIENT_ID,
-        client_secret: process.env.LINE_CLIENT_SECRET
-    }
+    let grant_type = "authorization_code";
+    let code = req.query.code;
+    let redirect_uri = "https://powerup-for-line.herokuapp.com/auth-success";
+    let client_id = process.env.LINE_CLIENT_ID;
+    let client_secret = process.env.LINE_CLIENT_SECRET;
 
     // Construct token url.
-    let token_url = "https://notify-bot.line.me/oauth/token?";
-    let index = 0;
-    for (let q of query_strings){
-        token_url = token_url + query_strings[index] + "=" + encodeURIComponent(q) + "&";
-        index++;
-    }
-    token_url = token_url.slice(0, -1);
+    let token_url = `https://notify-bot.line.me/oauth/token?grant_type=${grante_type}&code=${code}&redirect_uri=${redirect_uri}&client_id=${client_id}&client_secret=${client_secret}`;
     debug(`Token URL is ${token_url}`);
 
     let headers = {
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
-    res.sendStatus(400);
-    /*
     request.postAsync({
         url: token_url,
         headers: headers,
@@ -77,7 +67,6 @@ router.get('/auth-success', (req, res, next) => {
         res.sendStatus(500);
         return;
     });
-    */
 });
 
 module.exports = router;
