@@ -36,7 +36,7 @@ router.get('/auth-success', (req, res, next) => {
     let client_secret = process.env.LINE_CLIENT_SECRET;
 
     // Construct token url.
-    let token_url = `https://notify-bot.line.me/oauth/token?grant_type=${grante_type}&code=${code}&redirect_uri=${redirect_uri}&client_id=${client_id}&client_secret=${client_secret}`;
+    let token_url = `https://notify-bot.line.me/oauth/token?grant_type=${grant_type}&code=${code}&redirect_uri=${redirect_uri}&client_id=${client_id}&client_secret=${client_secret}`;
     debug(`Token URL is ${token_url}`);
 
     let headers = {

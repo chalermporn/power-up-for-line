@@ -446,7 +446,7 @@ TrelloPowerUp.initialize({
     var state = "dummy";
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
     console.log("Auth URL is " + auth_url);
-    open(auth_url, {height: 900, width: 600}, function(err, code){
+    open(auth_url, {height: 600, width: 900}, function(err, code){
       if (err) throw err;
     }); // Check out public/authorize.html to see how to ask a user to auth
   }
