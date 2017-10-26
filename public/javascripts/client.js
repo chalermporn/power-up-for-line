@@ -441,11 +441,11 @@ TrelloPowerUp.initialize({
 
     var response_type = "code";
     var client_id = LINE_CLIENT_ID;
-    var redirect_uri = encodeURIComponent(window.location.origin + "/power-up-template/auth-success");
+    var redirect_uri = "https://powerup-for-line.herokuapp.com/auth-success";
     var scope = "notify";
     var state = "dummy";
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
-
+    console.log("Auth URL is " + auth_url);
     open(auth_url, {height: 900, width: 600}, function(err, code){
       if (err) throw err;
     }); // Check out public/authorize.html to see how to ask a user to auth
