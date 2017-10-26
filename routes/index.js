@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const debug = require("debug")("powerup-for-line");
 const request = require("request");
-const memory = require("memory-cache");
 
 Promise = require("bluebird");
 Promise.promisifyAll(request);
@@ -60,30 +59,12 @@ router.get('/auth-success', (req, res, next) => {
         }
 
         debug(`Access Token is ${response.body.access_token}`);
-        /*
-        memory.put(code, response.body.access_token, 60000);
-        return res.sendStatus(200);
-        */
 
         return res.redirect("/auth-success?token=" + response.body.access_token);
-        /*
-        res.render('auth-success', {
-            access_token: response.body.access_token
-        });
-        return;
-        */
     }).catch((error) => {
         debug(error);
         res.sendStatus(500);
         return;
-    });
-});
-
-router.get('/code/:code', (req, res, next) => {
-    let access_token = memory.get(req.param.code);
-    debug(`Access token corresponding to ${req.param.code} is ${access_token}`);
-    return res.json({
-        access_token: access_token
     });
 });
 

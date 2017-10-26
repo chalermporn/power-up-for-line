@@ -37272,24 +37272,8 @@ TrelloPowerUp.initialize({
     console.log("Auth URL is " + auth_url);
     open(auth_url, {height: 600, width: 900}, function(err, query){
         if (err) throw err;
-
-        console.log(query);
-        return;
-        console.log(query.code);
-        var token_url = "https://powerup-for-line.herokuapp.com/code/" + query.code;
-
-        request.getAsync({
-            url: token_url,
-            json: true
-        }).then((response) => {
-            console.log(response);
-            console.log("access_token is " + response.access_token);
-            return t.set("member", "private", "token", response.access_token);
-        }).then((response) => {
-            console.log("access_token saved.");
-        }).catch((e) => {
-            console.log(e);
-        });
+        console.log("access token is " + query.token);
+        return t.set("member", "private", "token", query.token);
     }); // Check out public/authorize.html to see how to ask a user to auth
   }
 });
