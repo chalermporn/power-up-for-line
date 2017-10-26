@@ -3,7 +3,7 @@
   "description": "",
   "details": "LINE Power-Up prototype.",
   "icon": {
-    "url": "/public/images/LINE_Icon.png"
+    "url": "/images/LINE_Icon.png"
   },
   "author": "Kazuki Nakajima",
   "capabilities": [
