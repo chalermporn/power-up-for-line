@@ -59,6 +59,7 @@ router.get('/auth-success', (req, res, next) => {
             return
         }
 
+        debug(`Access Token is ${response.body.access_token}`);
         res.render('auth-success', {
             access_token: response.body.access_token
         });
