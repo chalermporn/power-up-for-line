@@ -3,7 +3,7 @@
   "description": "",
   "details": "LINE Power-Up prototype.",
   "icon": {
-    "url": "/images/LINE_Icon.png"
+    "url": "https://powerup-for-line.herokuapp.com/images/LINE_Icon.png"
   },
   "author": "Kazuki Nakajima",
   "capabilities": [
@@ -22,7 +22,7 @@
   ],
   "connectors": {
     "iframe": {
-      "url": "/"
+      "url": "https://powerup-for-line.herokuapp.com/"
     }
   }
 }
