@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const debug = require("debug")("powerup-for-line");
 const request = require("request");
+const memory = require("memory-cache");
+
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
@@ -50,24 +52,34 @@ router.get('/auth-success', (req, res, next) => {
     }).then((response) => {
         if (response.statusCode !== 200){
             debug(`Faield to get access token.`);
-            res.sendStatus(response.body.Status);
-            return
+            return res.sendStatus(response.body.Status);
         }
         if (!response.body.access_token){
             debug(`Faield to get access token.`);
-            res.sendStatus(400);
-            return
+            return res.sendStatus(400);
         }
 
         debug(`Access Token is ${response.body.access_token}`);
+        memory.put(code, response.body.access_token, 60000);
+        return res.sendStatus(200);
+
+        /*
         res.render('auth-success', {
             access_token: response.body.access_token
         });
         return;
+        */
     }).catch((error) => {
         debug(error);
         res.sendStatus(500);
         return;
+    });
+});
+
+router.get('/code/:code', (req, res, next) => {
+    let access_token = memory.get(req.param.code);
+    return res.json({
+        access_token: access_token
     });
 });
 
