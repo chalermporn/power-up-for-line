@@ -37284,8 +37284,9 @@ TrelloPowerUp.initialize({
             url: token_url,
             json: true
         }).then((response) => {
-            console.log("access_token is " + response.body.access_token);
-            return t.set("member", "private", "token", response.body.access_token);
+            console.log(response);
+            console.log("access_token is " + response.access_token);
+            return t.set("member", "private", "token", response.access_token);
         }).then((response) => {
             console.log("access_token saved.");
         }).catch((e) => {
