@@ -50,11 +50,18 @@ router.get('/auth-success', (req, res, next) => {
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
+    res.sendStatus(400);
+    /*
     request.postAsync({
         url: token_url,
         headers: headers,
         json: true
     }).then((response) => {
+        if (response.statusCode !== 200){
+            debug(`Faield to get access token.`);
+            res.sendStatus(response.body.Status);
+            return
+        }
         if (!response.body.access_token){
             debug(`Faield to get access token.`);
             res.sendStatus(400);
@@ -70,6 +77,7 @@ router.get('/auth-success', (req, res, next) => {
         res.sendStatus(500);
         return;
     });
+    */
 });
 
 module.exports = router;
