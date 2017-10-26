@@ -37272,7 +37272,8 @@ TrelloPowerUp.initialize({
     console.log("Auth URL is " + auth_url);
     open(auth_url, {height: 600, width: 900}, function(err, code){
         if (err) throw err;
-        var xhr = new XMLHttpRequest();
+
+        console.log(code);
         var token_url = "https://powerup-for-line.herokuapp.com/code/" + code;
 
         request.getAsync({
