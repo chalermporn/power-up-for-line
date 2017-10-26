@@ -55,11 +55,6 @@ router.get('/auth-success', (req, res, next) => {
         headers: headers,
         json: true
     }).then((response) => {
-        if (response.Status !== 200){
-            debug(`Faield to get access token.`);
-            res.sendStatus(response.body.Status);
-            return
-        }
         if (!response.body.access_token){
             debug(`Faield to get access token.`);
             res.sendStatus(400);
