@@ -1,7 +1,6 @@
 /* global TrelloPowerUp */
 
-var LINE_CLIENT_ID = "KmzGXl064KMgX61dLxM4XE";
-var LIEN_CLIENT_SECRET = "yxieWt2aWRua5fhMahl5ZKPh5YW0zlpHmnAGTgDAHvm";
+console.log(LINE_CLIENT_ID);
 var open = require("oauth-open");
 
 // we can access Bluebird Promises as follows

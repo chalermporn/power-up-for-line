@@ -1,7 +1,223 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/**
+ * Module dependencies
+ */
+
+var querystring = require('querystring');
+var assign = require('object-assign');
+var once = require('once');
+
+/**
+ * Export `open`
+ */
+
+module.exports = open;
+
+/**
+ * Initialize `open`
+ */
+
+function open(url, options, fn) {
+  options = options || {};
+
+  if (2 == arguments.length) {
+    fn = options;
+    options = {};
+  }
+
+  var str = stringify(configure(options));
+  var popup = window.open(url, options.name || '', str);
+  popup.focus();
+  poll(popup, fn);
+  return popup;
+}
+
+/**
+ * Poll
+ */
+
+function poll(popup, fn) {
+  var done = once(fn);
+
+  var intervalId = setInterval(function polling() {
+    try {
+      var documentOrigin = document.location.host;
+      var popupWindowOrigin = popup.location.host;
+    } catch (e) {};
+
+    if (popupWindowOrigin === documentOrigin && (popup.location.search || popup.location.hash)) {
+      var queryParams = popup.location.search.substring(1).replace(/\/$/, '');
+      var hashParams = popup.location.hash.substring(1).replace(/[\/$]/, '');
+      var hash = querystring.parse(hashParams);
+      var qs = querystring.parse(queryParams);
+
+      qs = assign(qs, hash);
+
+      if (qs.error) {
+        clearInterval(intervalId);
+        popup.close();
+        done(new Error(qs.error));
+      } else {
+        clearInterval(intervalId);
+        popup.close();
+        done(null, qs);
+      }
+    }
+
+  }, 35);
+}
+
+/**
+ * Configure the popup
+ */
+
+function configure(options) {
+  var width = options.width || 500;
+  var height = options.height || 500;
+  return assign({
+    width: width,
+    height: height,
+    left: window.screenX + ((window.outerWidth - width) / 2),
+    top: window.screenY + ((window.outerHeight - height) / 2.5)
+  }, options || {});
+}
+
+/**
+ * Stringify
+ */
+
+function stringify(obj) {
+  var parts = [];
+  for (var key in obj) {
+    parts.push(key + '=' + obj[key]);
+  }
+  return parts.join(',');
+}
+
+},{"object-assign":2,"once":3,"querystring":8}],2:[function(require,module,exports){
+'use strict';
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function ToObject(val) {
+	if (val == null) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function ownEnumerableKeys(obj) {
+	var keys = Object.getOwnPropertyNames(obj);
+
+	if (Object.getOwnPropertySymbols) {
+		keys = keys.concat(Object.getOwnPropertySymbols(obj));
+	}
+
+	return keys.filter(function (key) {
+		return propIsEnumerable.call(obj, key);
+	});
+}
+
+module.exports = Object.assign || function (target, source) {
+	var from;
+	var keys;
+	var to = ToObject(target);
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = arguments[s];
+		keys = ownEnumerableKeys(Object(from));
+
+		for (var i = 0; i < keys.length; i++) {
+			to[keys[i]] = from[keys[i]];
+		}
+	}
+
+	return to;
+};
+
+},{}],3:[function(require,module,exports){
+var wrappy = require('wrappy')
+module.exports = wrappy(once)
+module.exports.strict = wrappy(onceStrict)
+
+once.proto = once(function () {
+  Object.defineProperty(Function.prototype, 'once', {
+    value: function () {
+      return once(this)
+    },
+    configurable: true
+  })
+
+  Object.defineProperty(Function.prototype, 'onceStrict', {
+    value: function () {
+      return onceStrict(this)
+    },
+    configurable: true
+  })
+})
+
+function once (fn) {
+  var f = function () {
+    if (f.called) return f.value
+    f.called = true
+    return f.value = fn.apply(this, arguments)
+  }
+  f.called = false
+  return f
+}
+
+function onceStrict (fn) {
+  var f = function () {
+    if (f.called)
+      throw new Error(f.onceError)
+    f.called = true
+    return f.value = fn.apply(this, arguments)
+  }
+  var name = fn.name || 'Function wrapped with `once`'
+  f.onceError = name + " shouldn't be called more than once"
+  f.called = false
+  return f
+}
+
+},{"wrappy":4}],4:[function(require,module,exports){
+// Returns a wrapper function that returns a wrapped callback
+// The wrapper function should do some stuff, and return a
+// presumably different callback function.
+// This makes sure that own properties are retained, so that
+// decorations and such are not lost along the way.
+module.exports = wrappy
+function wrappy (fn, cb) {
+  if (fn && cb) return wrappy(fn)(cb)
+
+  if (typeof fn !== 'function')
+    throw new TypeError('need wrapper function')
+
+  Object.keys(fn).forEach(function (k) {
+    wrapper[k] = fn[k]
+  })
+
+  return wrapper
+
+  function wrapper() {
+    var args = new Array(arguments.length)
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i]
+    }
+    var ret = fn.apply(this, args)
+    var cb = args[args.length-1]
+    if (typeof ret === 'function' && ret !== cb) {
+      Object.keys(cb).forEach(function (k) {
+        ret[k] = cb[k]
+      })
+    }
+    return ret
+  }
+}
+
+},{}],5:[function(require,module,exports){
 /* global TrelloPowerUp */
 
-var LINE_CLIENT_ID = "KmzGXl064KMgX61dLxM4XE";
+console.log(LINE_CLIENT_ID);
 var open = require("oauth-open");
 
 // we can access Bluebird Promises as follows
@@ -448,232 +664,27 @@ TrelloPowerUp.initialize({
     var state = "dummy";
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
 
-    open(auth_url, function(err, code){
+    open(auth_url, {height: 800, width: 600}, function(err, code){
       if (err) throw err;
       console.log(code);
+
+      // Request Access Token using code.
+      var grant_type = "authorization_code";
+      var redirect_uri = encodeURIComponent(window.location.origin + "/power-up-template/auth-success.html");
+      var client_id = LNE_CLIENT_ID;
+      var client_secret = LINE_CLIENT_SECRET;
+      var token_url = "https://notify-bot.line.me/oauth/token?grant_type=" + grant_type + "&code=" + code + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", token_url, false);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }); // Check out public/authorize.html to see how to ask a user to auth
   }
 });
 
 console.log('Loaded by: ' + document.referrer);
 
-},{"oauth-open":2}],2:[function(require,module,exports){
-/**
- * Module dependencies
- */
-
-var querystring = require('querystring');
-var assign = require('object-assign');
-var once = require('once');
-
-/**
- * Export `open`
- */
-
-module.exports = open;
-
-/**
- * Initialize `open`
- */
-
-function open(url, options, fn) {
-  options = options || {};
-
-  if (2 == arguments.length) {
-    fn = options;
-    options = {};
-  }
-
-  var str = stringify(configure(options));
-  var popup = window.open(url, options.name || '', str);
-  popup.focus();
-  poll(popup, fn);
-  return popup;
-}
-
-/**
- * Poll
- */
-
-function poll(popup, fn) {
-  var done = once(fn);
-
-  var intervalId = setInterval(function polling() {
-    try {
-      var documentOrigin = document.location.host;
-      var popupWindowOrigin = popup.location.host;
-    } catch (e) {};
-
-    if (popupWindowOrigin === documentOrigin && (popup.location.search || popup.location.hash)) {
-      var queryParams = popup.location.search.substring(1).replace(/\/$/, '');
-      var hashParams = popup.location.hash.substring(1).replace(/[\/$]/, '');
-      var hash = querystring.parse(hashParams);
-      var qs = querystring.parse(queryParams);
-
-      qs = assign(qs, hash);
-
-      if (qs.error) {
-        clearInterval(intervalId);
-        popup.close();
-        done(new Error(qs.error));
-      } else {
-        clearInterval(intervalId);
-        popup.close();
-        done(null, qs);
-      }
-    }
-
-  }, 35);
-}
-
-/**
- * Configure the popup
- */
-
-function configure(options) {
-  var width = options.width || 500;
-  var height = options.height || 500;
-  return assign({
-    width: width,
-    height: height,
-    left: window.screenX + ((window.outerWidth - width) / 2),
-    top: window.screenY + ((window.outerHeight - height) / 2.5)
-  }, options || {});
-}
-
-/**
- * Stringify
- */
-
-function stringify(obj) {
-  var parts = [];
-  for (var key in obj) {
-    parts.push(key + '=' + obj[key]);
-  }
-  return parts.join(',');
-}
-
-},{"object-assign":3,"once":4,"querystring":8}],3:[function(require,module,exports){
-'use strict';
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function ToObject(val) {
-	if (val == null) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function ownEnumerableKeys(obj) {
-	var keys = Object.getOwnPropertyNames(obj);
-
-	if (Object.getOwnPropertySymbols) {
-		keys = keys.concat(Object.getOwnPropertySymbols(obj));
-	}
-
-	return keys.filter(function (key) {
-		return propIsEnumerable.call(obj, key);
-	});
-}
-
-module.exports = Object.assign || function (target, source) {
-	var from;
-	var keys;
-	var to = ToObject(target);
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = arguments[s];
-		keys = ownEnumerableKeys(Object(from));
-
-		for (var i = 0; i < keys.length; i++) {
-			to[keys[i]] = from[keys[i]];
-		}
-	}
-
-	return to;
-};
-
-},{}],4:[function(require,module,exports){
-var wrappy = require('wrappy')
-module.exports = wrappy(once)
-module.exports.strict = wrappy(onceStrict)
-
-once.proto = once(function () {
-  Object.defineProperty(Function.prototype, 'once', {
-    value: function () {
-      return once(this)
-    },
-    configurable: true
-  })
-
-  Object.defineProperty(Function.prototype, 'onceStrict', {
-    value: function () {
-      return onceStrict(this)
-    },
-    configurable: true
-  })
-})
-
-function once (fn) {
-  var f = function () {
-    if (f.called) return f.value
-    f.called = true
-    return f.value = fn.apply(this, arguments)
-  }
-  f.called = false
-  return f
-}
-
-function onceStrict (fn) {
-  var f = function () {
-    if (f.called)
-      throw new Error(f.onceError)
-    f.called = true
-    return f.value = fn.apply(this, arguments)
-  }
-  var name = fn.name || 'Function wrapped with `once`'
-  f.onceError = name + " shouldn't be called more than once"
-  f.called = false
-  return f
-}
-
-},{"wrappy":5}],5:[function(require,module,exports){
-// Returns a wrapper function that returns a wrapped callback
-// The wrapper function should do some stuff, and return a
-// presumably different callback function.
-// This makes sure that own properties are retained, so that
-// decorations and such are not lost along the way.
-module.exports = wrappy
-function wrappy (fn, cb) {
-  if (fn && cb) return wrappy(fn)(cb)
-
-  if (typeof fn !== 'function')
-    throw new TypeError('need wrapper function')
-
-  Object.keys(fn).forEach(function (k) {
-    wrapper[k] = fn[k]
-  })
-
-  return wrapper
-
-  function wrapper() {
-    var args = new Array(arguments.length)
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i]
-    }
-    var ret = fn.apply(this, args)
-    var cb = args[args.length-1]
-    if (typeof ret === 'function' && ret !== cb) {
-      Object.keys(cb).forEach(function (k) {
-        ret[k] = cb[k]
-      })
-    }
-    return ret
-  }
-}
-
-},{}],6:[function(require,module,exports){
+},{"oauth-open":1}],6:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -852,4 +863,4 @@ var objectKeys = Object.keys || function (obj) {
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":6,"./encode":7}]},{},[1]);
+},{"./decode":6,"./encode":7}]},{},[5]);
