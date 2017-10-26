@@ -1,6 +1,5 @@
 /* global TrelloPowerUp */
 
-console.log(LINE_CLIENT_ID);
 var open = require("oauth-open");
 
 // we can access Bluebird Promises as follows
@@ -442,25 +441,13 @@ TrelloPowerUp.initialize({
 
     var response_type = "code";
     var client_id = LINE_CLIENT_ID;
-    var redirect_uri = encodeURIComponent(window.location.origin + "/power-up-template/auth-success.html");
+    var redirect_uri = encodeURIComponent(window.location.origin + "/power-up-template/auth-success");
     var scope = "notify";
     var state = "dummy";
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
 
-    open(auth_url, {height: 800, width: 600}, function(err, code){
+    open(auth_url, {height: 900, width: 600}, function(err, code){
       if (err) throw err;
-      console.log(code);
-
-      // Request Access Token using code.
-      var grant_type = "authorization_code";
-      var redirect_uri = encodeURIComponent(window.location.origin + "/power-up-template/auth-success.html");
-      var client_id = LNE_CLIENT_ID;
-      var client_secret = LINE_CLIENT_SECRET;
-      var token_url = "https://notify-bot.line.me/oauth/token?grant_type=" + grant_type + "&code=" + code + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret;
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", token_url, false);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     }); // Check out public/authorize.html to see how to ask a user to auth
   }
 });
