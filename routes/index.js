@@ -24,6 +24,7 @@ router.get('/auth-success', (req, res, next) => {
     debug(`Authorization code is ${req.query.code}`);
 
     if (!process.env.LINE_CLIENT_SECRET){
+        debug(`CLIENT_SECRET not set.`);
         throw new Error(`LINE_CLIENT_SECRET not set.`)
     }
 
