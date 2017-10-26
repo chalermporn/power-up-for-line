@@ -16,9 +16,6 @@ router.get('/', (req, res, next) => {
 // OAuth Success Callback
 router.get('/auth-success', (req, res, next) => {
 
-    debug(req.query.code);
-    return res.sendStatus(200);
-/*
     if (!req.query.code){
         return res.sendStatus(400);
     }
@@ -40,7 +37,7 @@ router.get('/auth-success', (req, res, next) => {
     }
 
     // Construct token url.
-    let token_url = "https://notify-bot.line.me/oauth/token?grant_type=" + grant_type + "&code=" + code + "&redirect_uri=" + redirect_uri + "&client_id=" + client_id + "&client_secret=" + client_secret;
+    let token_url = "https://notify-bot.line.me/oauth/token?";
     let index = 0;
     for (let q of query_strings){
         token_url = token_url + query_strings[index] + "=" + encodeURIComponent(q) + "&";
@@ -53,25 +50,31 @@ router.get('/auth-success', (req, res, next) => {
         "Content-Type": "application/x-www-form-urlencoded"
     }
 
-    return request.postAsync({
+    request.postAsync({
         url: token_url,
         headers: headers,
         json: true
     }).then((response) => {
         if (response.Status !== 200){
             debug(`Faield to get access token.`);
-            return res.sendStatus(response.body.Status);
+            res.sendStatus(response.body.Status);
+            return
         }
         if (!response.body.access_token){
             debug(`Faield to get access token.`);
-            return res.sendStatus(400);
+            res.sendStatus(400);
+            return
         }
 
-        return res.render('auth-success', {
+        res.render('auth-success', {
             access_token: response.body.access_token
         });
+        return;
+    }).catch((error) => {
+        debug(error);
+        res.sendStatus(500);
+        return;
     });
-    */
 });
 
 module.exports = router;
