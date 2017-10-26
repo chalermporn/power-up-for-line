@@ -15,6 +15,10 @@ router.get('/', (req, res, next) => {
 
 // OAuth Success Callback
 router.get('/auth-success', (req, res, next) => {
+
+    debug(req.query.code);
+    return res.sendStatus(200);
+/*
     if (!req.query.code){
         return res.sendStatus(400);
     }
@@ -63,15 +67,11 @@ router.get('/auth-success', (req, res, next) => {
             return res.sendStatus(400);
         }
 
-        /*
-        return res.json({
-            access_token: response.body.access_token
-        });
-        */
         return res.render('auth-success', {
             access_token: response.body.access_token
         });
     });
+    */
 });
 
 module.exports = router;
