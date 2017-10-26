@@ -60,9 +60,12 @@ router.get('/auth-success', (req, res, next) => {
         }
 
         debug(`Access Token is ${response.body.access_token}`);
+        /*
         memory.put(code, response.body.access_token, 60000);
         return res.sendStatus(200);
+        */
 
+        return res.redirect("/auth-success?token=" + response.body.access_token);
         /*
         res.render('auth-success', {
             access_token: response.body.access_token
@@ -78,6 +81,7 @@ router.get('/auth-success', (req, res, next) => {
 
 router.get('/code/:code', (req, res, next) => {
     let access_token = memory.get(req.param.code);
+    debug(`Access token corresponding to ${req.param.code} is ${access_token}`);
     return res.json({
         access_token: access_token
     });

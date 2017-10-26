@@ -37273,10 +37273,8 @@ TrelloPowerUp.initialize({
     open(auth_url, {height: 600, width: 900}, function(err, query){
         if (err) throw err;
 
-        if (state !== query.state){
-            throw err;
-        }
-
+        console.log(query);
+        return;
         console.log(query.code);
         var token_url = "https://powerup-for-line.herokuapp.com/code/" + query.code;
 
