@@ -37017,12 +37017,9 @@ var boardButtonCallback = function(t){
   });
 };
 
-var lineConfirmStatusButtonCallback = function(t){
+var lineCheckStatusButtonCallback = function(t){
 
-    return Promise.resolve().then((response) => {
-    }).then((response) => {
-        return t.get('member', 'private', 'token');
-    }).then((access_token) => {
+    return t.get('member', 'private', 'token').then((access_token) => {
         if (!access_token){
             return Promise.reject(new Error(`token not found.`));
         }
@@ -37200,8 +37197,8 @@ TrelloPowerUp.initialize({
       target: 'Trello Developer Site' // optional target for above url
     },{
       icon: LINE_ICON,
-      text: 'Confirm Status on LINE',
-      callback: lineConfirmStatusButtonCallback
+      text: 'Check Status',
+      callback: lineCheckStatusButtonCallback
     }];
   },
   'card-detail-badges': function(t, options) {
