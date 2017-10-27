@@ -204,8 +204,8 @@ var lineNotify = function(t, payload){
         let url = `https://${window.location.hostname}/api/notify?access_token=${access_token}`;
         return request.postAsync({
             url: url,
-            headers: headers,
-            body: payload
+            body: payload,
+            json: true
         });
     }).then((response) => {
         console.log(`Message sent.`);
