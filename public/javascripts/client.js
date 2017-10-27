@@ -196,12 +196,47 @@ var boardButtonCallback = function(t){
   });
 };
 
+var lineNotify = function(payload){
+    return t.get('member', 'private', 'token').then((access_token) => {
+        if (!access_token){
+            return Promise.reject(new Error(`token not found.`));
+        }
+        let url = `https://${window.location.hostname}/api/notify?access_token=${access_token}`;
+        let headers = {
+            "Authorization": `Bearer ${access_token}`,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+        return request.postAsync({
+            url: url,
+            headers: headers,
+            form: payload
+        });
+    }).then((response) => {
+        console.log(`Message sent.`);
+    }).catch((e) => {
+        console.error();(`Failed to send message.`);
+        console.error(e);
+    });
+}
+
+var lineCelebrateButtonCallback = function(t){
+    let card;
+    return t.card('all').then((response) => {
+        card = response;
+        return lineNotify({
+            message: `Congrats!`,
+            stickerPackageId: 2,
+            stickerId: 144
+        });
+    }).then((response) => {
+        console.log('callback completed.');
+    });
+}
+
 var lineCheckStatusButtonCallback = function(t){
     let card;
     return t.card('all').then((response) => {
         card = response;
-        console.log(card);
-
         return t.get('member', 'private', 'token');
     }).then((access_token) => {
         if (!access_token){
@@ -213,7 +248,7 @@ var lineCheckStatusButtonCallback = function(t){
             "Content-Type": "application/x-www-form-urlencoded"
         }
         let form = {
-            message: "How is this task going on?",
+            message: `How is ${card.name} going on?`,
             stickerPackageId: 1,
             stickerId: 113
         }
@@ -385,6 +420,10 @@ TrelloPowerUp.initialize({
       icon: LINE_ICON,
       text: 'Check Status',
       callback: lineCheckStatusButtonCallback
+    },{
+      icon: LINE_ICON,
+      text: 'Celebrate',
+      callback: lineCelebrateButtonCallback
     }];
   },
   'card-detail-badges': function(t, options) {
