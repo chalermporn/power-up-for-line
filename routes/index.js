@@ -31,10 +31,10 @@ router.get('/auth-success', (req, res, next) => {
 
     // Request Access Token using code.
     let grant_type = "authorization_code";
-    let code = req.query.code;
-    let redirect_uri = `${req.protocol}://${req.hostname}/auth-success`;
-    let client_id = process.env.LINE_CLIENT_ID;
-    let client_secret = process.env.LINE_CLIENT_SECRET;
+    let code = encodeURIComponent(req.query.code);
+    let redirect_uri = encodeURIComponent(`https://${req.hostname}/auth-success`);
+    let client_id = encodeURIComponent(process.env.LINE_CLIENT_ID);
+    let client_secret = encodeURIComponent(process.env.LINE_CLIENT_SECRET);
 
     // Construct token url.
     let token_url = `https://notify-bot.line.me/oauth/token?grant_type=${grant_type}&code=${code}&redirect_uri=${redirect_uri}&client_id=${client_id}&client_secret=${client_secret}`;
