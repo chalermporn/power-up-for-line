@@ -37023,14 +37023,10 @@ var lineNotify = function(t, payload){
             return Promise.reject(new Error(`token not found.`));
         }
         let url = `https://${window.location.hostname}/api/notify?access_token=${access_token}`;
-        let headers = {
-            "Authorization": `Bearer ${access_token}`,
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
         return request.postAsync({
             url: url,
             headers: headers,
-            form: payload
+            body: payload
         });
     }).then((response) => {
         console.log(`Message sent.`);
@@ -37053,6 +37049,16 @@ var lineCelebrateButtonCallback = function(t){
 }
 
 var lineCheckStatusButtonCallback = function(t){
+    return t.card('all').then((card) => {
+        return lineNotify(t, {
+            message: `How is "${card.name}" going?`,
+            stickerPackageId: 1,
+            stickerId: 113
+        });
+    }).then((response) => {
+        console.log('callback completed.');
+    });
+    /*
     let card;
     return t.card('all').then((response) => {
         card = response;
@@ -37082,6 +37088,7 @@ var lineCheckStatusButtonCallback = function(t){
         console.log(`Failed to send message.`);
         console.log(e);
     });
+    */
 }
 
 var cardButtonCallback = function(t){

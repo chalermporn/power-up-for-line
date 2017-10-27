@@ -14,11 +14,7 @@ router.post('/notify', (req, res, next) => {
         "Authorization": `Bearer ${req.query.access_token}`,
         "Content-Type": "application/x-www-form-urlencoded"
     };
-    let form = {
-        message: "How is this task going on?",
-        stickerPackageId: 1,
-        stickerId: 113
-    };
+    let form = req.body;
     request.postAsync({
         url: url,
         headers: headers,
