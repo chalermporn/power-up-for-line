@@ -672,7 +672,7 @@ TrelloPowerUp.initialize({
 
         console.log("access token is " + query.token);
         return t.set("member", "private", "token", query.token).then((response) => {
-            return t.close.Popup();
+            return t.closePopup();
         });
     });
   }
