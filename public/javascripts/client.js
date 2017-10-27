@@ -222,6 +222,8 @@ var lineCheckStatusButtonCallback = function(t){
             headers: headers,
             form: form
         });
+    }).then((response) => {
+        console.log(`Message sent.`);
     }).catch((e) => {
         console.log(`Failed to send message.`);
         console.log(e);
