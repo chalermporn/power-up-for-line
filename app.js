@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', route_index);
-app.use('/api', proxy('notify-api.line.me'));
+app.use('/api', proxy('notify-api.line.me/api'));
 
 
 // catch 404 and forward to error handler
