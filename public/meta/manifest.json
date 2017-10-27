@@ -8,12 +8,8 @@
   "author": "Kazuki Nakajima",
   "capabilities": [
     "authorization-status",
-    "attachment-sections",
-    "attachment-thumbnail",
     "callback",
     "card-buttons",
-    "card-from-url",
-    "format-url",
     "show-authorization",
     "show-settings"
   ],
