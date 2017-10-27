@@ -662,7 +662,8 @@ TrelloPowerUp.initialize({
     var scope = "notify";
     var state = encodeURIComponent(Math.floor( Math.random() * (99999 - 10000 + 1) ) + 10000);
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
-    console.log("Auth URL is " + auth_url);
+    console.log("auth_url is " + auth_url);
+
     open(auth_url, {height: 800, width: 900}, function(err, query){
         if (err) throw err;
         if (query.state !== state){
@@ -670,8 +671,10 @@ TrelloPowerUp.initialize({
         }
 
         console.log("access token is " + query.token);
-        return t.set("member", "private", "token", query.token);
-    }); // Check out public/authorize.html to see how to ask a user to auth
+        return t.set("member", "private", "token", query.token).then((response) => {
+            return t.close.Popup();
+        });
+    });
   }
 });
 
