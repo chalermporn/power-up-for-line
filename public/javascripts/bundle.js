@@ -37058,37 +37058,6 @@ var lineCheckStatusButtonCallback = function(t){
     }).then((response) => {
         console.log('callback completed.');
     });
-    /*
-    let card;
-    return t.card('all').then((response) => {
-        card = response;
-        return t.get('member', 'private', 'token');
-    }).then((access_token) => {
-        if (!access_token){
-            return Promise.reject(new Error(`token not found.`));
-        }
-        let url = `https://${window.location.hostname}/api/notify?access_token=${access_token}`;
-        let headers = {
-            "Authorization": `Bearer ${access_token}`,
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-        let form = {
-            message: `How is ${card.name} going on?`,
-            stickerPackageId: 1,
-            stickerId: 113
-        }
-        return request.postAsync({
-            url: url,
-            headers: headers,
-            form: form
-        });
-    }).then((response) => {
-        console.log(`Message sent.`);
-    }).catch((e) => {
-        console.log(`Failed to send message.`);
-        console.log(e);
-    });
-    */
 }
 
 var cardButtonCallback = function(t){
@@ -37226,23 +37195,8 @@ TrelloPowerUp.initialize({
       target: 'Inspiring Boards' // optional target for above url
     }];
   },
-  'card-badges': function(t, options){
-    return getBadges(t);
-  },
   'card-buttons': function(t, options) {
     return [{
-      // usually you will provide a callback function to be run on button click
-      // we recommend that you use a popup on click generally
-      icon: GRAY_ICON, // don't use a colored icon here
-      text: 'Open Popup',
-      callback: cardButtonCallback
-    }, {
-      // but of course, you could also just kick off to a url if that's your thing
-      icon: GRAY_ICON,
-      text: 'Just a URL',
-      url: 'https://developers.trello.com',
-      target: 'Trello Developer Site' // optional target for above url
-    },{
       icon: LINE_ICON,
       text: 'Check Status',
       callback: lineCheckStatusButtonCallback
@@ -37251,9 +37205,6 @@ TrelloPowerUp.initialize({
       text: 'Celebrate',
       callback: lineCelebrateButtonCallback
     }];
-  },
-  'card-detail-badges': function(t, options) {
-    return getBadges(t);
   },
   'card-from-url': function(t, options) {
     // options.url has the url in question
