@@ -660,11 +660,15 @@ TrelloPowerUp.initialize({
     var client_id = encodeURIComponent(LINE_CLIENT_ID);
     var redirect_uri = encodeURIComponent(`https://${window.location.hostname}/auth-success`);
     var scope = "notify";
-    var state = encodeURIComponent("dummy");
+    var state = encodeURIComponent(Math.floor( Math.random() * (99999 - 10000 + 1) ) + 10000);
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
     console.log("Auth URL is " + auth_url);
     open(auth_url, {height: 800, width: 900}, function(err, query){
         if (err) throw err;
+        if (query.state !== state){
+            throw new Error(`state does not match. original state was ${state} but got ${query.state}.`);
+        }
+
         console.log("access token is " + query.token);
         return t.set("member", "private", "token", query.token);
     }); // Check out public/authorize.html to see how to ask a user to auth
