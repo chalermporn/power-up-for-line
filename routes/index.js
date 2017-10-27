@@ -32,7 +32,7 @@ router.get('/auth-success', (req, res, next) => {
     // Request Access Token using code.
     let grant_type = "authorization_code";
     let code = req.query.code;
-    let redirect_uri = "https://powerup-for-line.herokuapp.com/auth-success";
+    let redirect_uri = `${req.protocol}://${req.hostname}/auth-success`;
     let client_id = process.env.LINE_CLIENT_ID;
     let client_secret = process.env.LINE_CLIENT_SECRET;
 
