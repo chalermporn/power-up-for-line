@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var route_index = require('./routes/index');
+var proxy = require("express-http-proxy");
 
 var app = express();
 
@@ -31,6 +32,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', route_index);
+app.use('/api', proxy('notify-api.line.me'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
