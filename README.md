@@ -9,7 +9,7 @@ Since this power-up has not been published, you need to create new one.
 - Set following environment variables issued by LINE Notify Serivce.
     - LINE_CLIENT_ID
     - LINE_CLIENT_SECRET
-- [Create power-up.](https://trello.com/power-ups/admin)
+- [Create power-up.](https://trello.com/power-ups/admin) Manifest URL should be like https://YOUR_HOSTNAME/meta/manifest.json
 
 That's it.
 
