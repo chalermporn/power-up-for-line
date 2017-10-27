@@ -32,8 +32,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', route_index);
-app.post('/api', proxy({
-    url: "https://notify-api.line.me/api"
+app.post('/api/notify', proxy({
+    url: "https://notify-api.line.me/api/notify"
 }));
 
 
