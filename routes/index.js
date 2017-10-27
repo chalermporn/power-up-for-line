@@ -22,7 +22,7 @@ router.get('/auth-success', (req, res, next) => {
     }
 
     // If we got code, we request access token.
-    debug(`Authorization code is ${req.query.code}`);
+    debug(`code is ${req.query.code}`);
 
     if (!process.env.LINE_CLIENT_SECRET){
         debug(`CLIENT_SECRET not set.`);
@@ -38,7 +38,7 @@ router.get('/auth-success', (req, res, next) => {
 
     // Construct token url.
     let token_url = `https://notify-bot.line.me/oauth/token?grant_type=${grant_type}&code=${code}&redirect_uri=${redirect_uri}&client_id=${client_id}&client_secret=${client_secret}`;
-    debug(`Token URL is ${token_url}`);
+    debug(`token_url is ${token_url}`);
 
     let headers = {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -57,10 +57,12 @@ router.get('/auth-success', (req, res, next) => {
             debug(`Faield to get access token.`);
             return res.sendStatus(400);
         }
+        debug(`access_token is ${response.body.access_token}`);
 
-        debug(`Access Token is ${response.body.access_token}`);
+        let redirect_url = `/auth-success?token=${encodeURIComponent(response.body.access_token)}&state=${encodeURIComponent(req.query.state)}`;
+        debug(`redirect_url is ${redirect_url}`);
 
-        return res.redirect("/auth-success?token=" + response.body.access_token);
+        return res.redirect(redirect_url);
     }).catch((error) => {
         debug(error);
         res.sendStatus(500);

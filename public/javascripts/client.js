@@ -440,10 +440,10 @@ TrelloPowerUp.initialize({
     //var auth_url = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=' + LINE_CLIENT_ID + '&redirect_uri=' + window.location.origin + '%2Fauth-success.html&state=12345&scope=openid%20profile';
 
     var response_type = "code";
-    var client_id = LINE_CLIENT_ID;
-    var redirect_uri = "https://powerup-for-line.herokuapp.com/auth-success";
+    var client_id = encodeURIComponent(LINE_CLIENT_ID);
+    var redirect_uri = encodeURIComponent(`https://${window.location.hostname}/auth-success`);
     var scope = "notify";
-    var state = "dummy";
+    var state = encodeURIComponent("dummy");
     var auth_url = "https://notify-bot.line.me/oauth/authorize?response_type=" + response_type + "&client_id=" + client_id + "&redirect_uri=" + redirect_uri + "&scope=" + scope + "&state=" + state;
     console.log("Auth URL is " + auth_url);
     open(auth_url, {height: 800, width: 900}, function(err, query){
