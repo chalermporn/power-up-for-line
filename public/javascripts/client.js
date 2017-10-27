@@ -218,8 +218,7 @@ var lineConfirmStatusButtonCallback = function(t){
         return request.postAsync({
             url: url,
             headers: headers,
-            body: body,
-            json: true
+            body: body
         });
     }).catch((e) => {
         console.log(`Failed to send message.`);
