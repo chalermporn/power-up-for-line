@@ -252,6 +252,10 @@ var cardButtonCallback = function(t){
   */
 };
 
+var authorizeButtonCallback = function(t){
+    return t.popupClose();
+}
+
 // We need to call initialize to get all of our capability handles set up and registered with Trello
 TrelloPowerUp.initialize({
   // NOTE about asynchronous responses
@@ -413,9 +417,9 @@ TrelloPowerUp.initialize({
     return t.get('member', 'private', 'token')
     .then(function(token){
       if(token){
-        return { authorized: true };
+        return { authorized: true};
       }
-      return { authorized: false };
+      return { authorized: false, callback: authorizeButtonCallback };
     });
     /*
     return new TrelloPowerUp.Promise((resolve) =>
