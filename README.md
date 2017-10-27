@@ -13,4 +13,4 @@ Since this power-up has not been published, you need to create new one.
 
 That's it.
 
-Please feel free to folk and enhance this power-up for your purpose.
+Please feel free to fork and enhance this power-up for your purpose.
