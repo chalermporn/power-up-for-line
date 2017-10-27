@@ -37031,7 +37031,7 @@ var lineConfirmStatusButtonCallback = function(t){
             "Authorization": `Bearer ${access_token}`,
             "Content-Type": "application/x-www-form-urlencoded"
         }
-        let body = {
+        let form = {
             message: "How is this task going on?",
             stickerPackageId: 1,
             stickerId: 113
@@ -37039,7 +37039,7 @@ var lineConfirmStatusButtonCallback = function(t){
         return request.postAsync({
             url: url,
             headers: headers,
-            body: body
+            form: form
         });
     }).catch((e) => {
         console.log(`Failed to send message.`);
