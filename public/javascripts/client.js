@@ -205,7 +205,7 @@ var lineConfirmStatusButtonCallback = function(t){
         if (!access_token){
             return Promise.reject(new Error(`token not found.`));
         }
-        let url = `https://${window.location.hostname}/api/notify`;
+        let url = `https://${window.location.hostname}/api/notify?access_token=${access_token}`;
         let headers = {
             "Authorization": `Bearer ${access_token}`,
             "Content-Type": "application/x-www-form-urlencoded"
