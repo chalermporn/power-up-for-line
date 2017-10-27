@@ -1,10 +1,11 @@
 /* global TrelloPowerUp */
 
 var open = require("oauth-open");
+var request = require("request");
 
 // we can access Bluebird Promises as follows
 var Promise = TrelloPowerUp.Promise;
-
+Promise.promisifyAll(request);
 /*
 
 Trello Data Access
@@ -81,6 +82,7 @@ t.getAll();
 var GLITCH_ICON = './images/glitch.svg';
 var WHITE_ICON = './images/icon-white.svg';
 var GRAY_ICON = './images/icon-gray.svg';
+var LINE_ICON = './images/LINE_Icon.png';
 
 var randomBadgeColor = function() {
   return ['green', 'yellow', 'red', 'none'][Math.floor(Math.random() * 4)];
@@ -194,6 +196,36 @@ var boardButtonCallback = function(t){
   });
 };
 
+var lineConfirmStatusButtonCallback = function(t){
+
+    return Promise.resolve().then((response) => {
+    }).then((response) => {
+        return t.get('member', 'private', 'token');
+    }).then((access_token) => {
+        if (!access_token){
+            return Promise.reject(new Error(`token not found.`));
+        }
+        let url = "https://notify-api.line.me/api/notify";
+        let headers = {
+            "Authorization": `Bearer ${access_token}`,
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+        let body = {
+            message: "How is this task going on?",
+            stickerPackageId: 1,
+            stickerId: 113
+        }
+        return request.postAsync({
+            url: url,
+            headers: headers,
+            body: body
+        });
+    }).catch((e) => {
+        console.log(`Failed to send message.`);
+        console.log(e);
+    });
+}
+
 var cardButtonCallback = function(t){
   // Trello Power-Up Popups are actually pretty powerful
   // Searching is a pretty common use case, so why reinvent the wheel
@@ -251,10 +283,6 @@ var cardButtonCallback = function(t){
   });
   */
 };
-
-var authorizeButtonCallback = function(t){
-    return t.popupClose();
-}
 
 // We need to call initialize to get all of our capability handles set up and registered with Trello
 TrelloPowerUp.initialize({
@@ -349,6 +377,10 @@ TrelloPowerUp.initialize({
       text: 'Just a URL',
       url: 'https://developers.trello.com',
       target: 'Trello Developer Site' // optional target for above url
+    },{
+      icon: LINE_ICON,
+      text: 'Confirm Status on LINE',
+      callback: lineConfirmStatusButtonCallback
     }];
   },
   'card-detail-badges': function(t, options) {
@@ -419,7 +451,7 @@ TrelloPowerUp.initialize({
       if(token){
         return { authorized: true};
       }
-      return { authorized: false, callback: authorizeButtonCallback };
+      return { authorized: false};
     });
     /*
     return new TrelloPowerUp.Promise((resolve) =>
