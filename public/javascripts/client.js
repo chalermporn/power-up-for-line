@@ -196,7 +196,7 @@ var boardButtonCallback = function(t){
   });
 };
 
-var lineNotify = function(payload){
+var lineNotify = function(t, payload){
     return t.get('member', 'private', 'token').then((access_token) => {
         if (!access_token){
             return Promise.reject(new Error(`token not found.`));
@@ -220,11 +220,9 @@ var lineNotify = function(payload){
 }
 
 var lineCelebrateButtonCallback = function(t){
-    let card;
-    return t.card('all').then((response) => {
-        card = response;
-        return lineNotify({
-            message: `Congrats!`,
+    return t.card('all').then((card) => {
+        return lineNotify(t, {
+            message: `Congrats for completing "${card.name}"!`,
             stickerPackageId: 2,
             stickerId: 144
         });
