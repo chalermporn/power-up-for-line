@@ -197,8 +197,13 @@ var boardButtonCallback = function(t){
 };
 
 var lineCheckStatusButtonCallback = function(t){
+    let card;
+    return t.card('all').then((response) => {
+        card = response;
+        console.log(card);
 
-    return t.get('member', 'private', 'token').then((access_token) => {
+        return t.get('member', 'private', 'token');
+    }).then((access_token) => {
         if (!access_token){
             return Promise.reject(new Error(`token not found.`));
         }
