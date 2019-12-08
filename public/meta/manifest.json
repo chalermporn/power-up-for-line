@@ -3,7 +3,7 @@
   "description": "",
   "details": "LINE Power-Up prototype.",
   "icon": {
-    "url": "https://powerup-for-line.herokuapp.com/images/LINE_Icon.png"
+    "url": "https://noti-trello.herokuapp.com/images/LINE_Icon.png"
   },
   "author": "Kazuki Nakajima",
   "capabilities": [
@@ -15,7 +15,7 @@
   ],
   "connectors": {
     "iframe": {
-      "url": "https://powerup-for-line.herokuapp.com/"
+      "url": "https://noti-trello.herokuapp.com/"
     }
   }
 }
